@@ -1,0 +1,72 @@
+.create-modal {
+    display: flex;
+    position: absolute;
+    padding: 20px;
+    width: 30%;
+    border-radius: 10px;
+    background-color: #151b23f5;
+    color: white;
+
+    form {
+        width: 100%;
+
+        div {
+            display: flex;
+            flex-direction: column;
+            border-bottom: 2px solid rgba(168, 168, 168, 0.315);
+            width: 100%;
+    
+            h2 {
+                margin-bottom: 5px;
+            }
+            
+            input {
+                width: 100%;
+                margin-bottom: 10px;
+                padding: 3px;
+                font-size: 15px;
+            }
+        }
+
+        .button {
+            display: flex;
+            margin: auto;
+            width: 50%;
+            border: none;
+            margin-top: 15px;
+
+            button {
+                padding: 5px;
+                transition: background-color 0.1s ease-in-out, border-radius 0.1s ease-in-out;
+                border: none;
+            }
+
+            button:hover {
+                background-color: #35df62;
+                cursor: pointer;
+                border: none;
+                border-radius: 5px;
+              }
+        }
+    }
+
+    .close-create {
+        border: none;
+   
+
+        #close-create-modal {
+            width: 25px;
+            height: 25px;
+            color: rgb(255, 0, 0);
+            margin-left: auto;
+            transition: transform 0.2s ease;
+        }
+
+        #close-create-modal:hover {
+            transform: rotate(90deg);
+            cursor: pointer;
+        }
+    }
+
+    
+}

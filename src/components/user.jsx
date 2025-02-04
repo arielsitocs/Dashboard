@@ -4,7 +4,7 @@ import './user.css'
 import Delete from '../images/user-delete.png'
 import Update from '../images/user-update.png'
 
-function User({ name, rut, birth, position, email, phone }) {
+function User({ onOpenUpdate, name, rut, birth, position, email, phone }) {
     return (
         <div className="user">
             <div className="user-name">
@@ -34,7 +34,7 @@ function User({ name, rut, birth, position, email, phone }) {
             </div>
             <div className="user-functions">
                 <img src={Delete} alt="" />
-                <img src={Update} alt="" />
+                <img src={Update} onClick={onOpenUpdate} alt="" />
             </div>
         </div>
     )

@@ -1,5 +1,7 @@
 .user {
     display: grid;
+    background-color: #212830;
+    color: rgb(218, 218, 218);
     grid-template-columns: 20% 10% 20% 15% 20% 10% 5%;
 
     div {
@@ -19,12 +21,18 @@
     .user-functions {
         display: flex;
         flex-direction: row;
-        background-color: rgb(216, 216, 216);
+        background-color: rgb(61, 214, 120);
 
         img {
             width: 35px;
             height: 35px;
+            transition: transform 0.2s ease-in-out;
         }
+
+        img:hover {
+            transform: scale(1.2);
+            cursor: pointer;
+          }
     }
 
     .user-name {
