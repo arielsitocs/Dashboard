@@ -1,0 +1,33 @@
+.user {
+    display: grid;
+    grid-template-columns: 20% 10% 20% 15% 20% 10% 5%;
+
+    div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;
+        padding: 8px;
+
+        h2 {
+            font-size: 20px;
+        }
+    }
+
+    .user-functions {
+        display: flex;
+        flex-direction: row;
+        background-color: rgb(216, 216, 216);
+
+        img {
+            width: 35px;
+            height: 35px;
+        }
+    }
+
+    .user-name {
+        border-left: 1px solid black;
+    }
+}
