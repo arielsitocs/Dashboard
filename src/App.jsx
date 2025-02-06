@@ -9,7 +9,6 @@ import './App.css';
 import headerUser from './images/header-user.png';
 import headerAdd from './images/header-add.png';
 import headerSearch from './images/header-search.png';
-import { use } from 'react';
 
 function App() {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
@@ -54,15 +53,15 @@ function App() {
         <div className='users'>
           {
             users.length == 0 ?
-              <div className="no-users">
-                <h2>No existe ningún usuario.</h2>
+              <div className="no-users"> 
+                <h2>No existe ningún usuario.</h2> 
               </div>
               :
-              users.map((user, index) => ( // Si operador terniario es false
-                <User key={index} name={user.name} rut={user.rut} birth={user.birth} position={user.position} email={user.email} phone={user.phone} onOpenUpdate={openUpdateModal}></User>
+              users.map((user) => ( // Si operador terniario es false
+                <User key={user.id} id={user.id} name={user.name} rut={user.rut} birth={user.birth} position={user.position} email={user.email} phone={user.phone} onOpenUpdate={openUpdateModal}></User>
               ))
           }
-        </div>
+        </div> 
       </div>
 
       <Create isOpen={isCreateModalOpen} onClose={closeCreateModal}></Create>

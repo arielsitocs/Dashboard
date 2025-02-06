@@ -1,13 +1,25 @@
+import { useDispatch, useSelector } from 'react-redux';
 import './user.css'
 
 import Delete from '../../images/user-delete.png'
 import Update from '../../images/user-update.png'
 
-function User({ onOpenUpdate, name, rut, birth, position, email, phone }) {
+function User({ onOpenUpdate, id, name, rut, birth, position, email, phone }) {
+
+    const dispatch = useDispatch();
+    // const users = useSelector((state) => state.users);
+
+    const deleteUser = (e, id) => {
+        e.preventDefault();
+        
+        dispatch({ type: 'deleteUser', identifier: id }); // Despacha la acción con el id
+      };
+
     return (
         <div className="user">
             <div className="user-name">
                 <img src="" alt="" />
+                <p>{id}</p>
                 <h2>Nombre</h2>
                 <p>{name}</p>
             </div>
@@ -32,7 +44,7 @@ function User({ onOpenUpdate, name, rut, birth, position, email, phone }) {
                 <p>{phone}</p>
             </div>
             <div className="user-functions">
-                <img src={Delete} alt="" />
+                <img src={Delete} onClick={(e) => deleteUser(e, id)} alt="" />
                 <img src={Update} onClick={onOpenUpdate} alt="" />
             </div>
         </div>

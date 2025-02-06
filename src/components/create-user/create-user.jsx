@@ -18,11 +18,21 @@ function Create({ isOpen, onClose }) {
     const [newEmail, setNewEmail] = useState('');
     const [newPhone, setNewPhone] = useState('');
 
+    const generateId = () => {
+       if(users.length === 0){
+        return 1;
+       }
+       const lastUser = users[users.length - 1]
+       return lastUser.id + 1;
+    }
+
     const createUser = (e) => {
         e.preventDefault();
 
+        const newId = generateId();
+
         const newUser = {
-            id: users.length + 1,
+            id: newId,
             name: newName,
             rut: newRut,
             birth: newBirth,
@@ -31,18 +41,18 @@ function Create({ isOpen, onClose }) {
             phone: newPhone,
         };
 
-        console.log(newUser)
+        // console.log(newUser)
 
         // Usamos el dispatch para realizar la acción de añadir un usuario a la Store //
         dispatch({type: 'addUser', payload: newUser});
         
-        console.log(users);
+        // console.log(users);
 
         onClose();
     }
 
     // useEffect(() => {
-    //     console.log("Usuarios: "+users)
+    //     console.log("Usuarios: "+users) 
     // }, [users]);
 
     return (
