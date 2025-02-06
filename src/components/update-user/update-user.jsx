@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './update.css';
 
-import CloseModal from '../images/close-modal.png'
+import CloseModal from '../../images/close-modal.png';
 
 function Update({ isOpen, onClose, name, rut, birth, position, email, phone }) {
     if (!isOpen) return null;

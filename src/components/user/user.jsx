@@ -1,8 +1,7 @@
-import React from "react";
 import './user.css'
 
-import Delete from '../images/user-delete.png'
-import Update from '../images/user-update.png'
+import Delete from '../../images/user-delete.png'
+import Update from '../../images/user-update.png'
 
 function User({ onOpenUpdate, name, rut, birth, position, email, phone }) {
     return (

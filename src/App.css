@@ -95,4 +95,15 @@
   .users {
     background-color: rgba(226, 226, 226, 0.493);
   }
+
+  .no-users {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    
+    h2 {
+      font-size: 22px;
+    }
+  }
 }

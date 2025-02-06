@@ -1,17 +1,22 @@
 import React from 'react';
 import { useState } from 'react';
-import User from './components/user.jsx';
-import Create from './components/create-user.jsx'
-import Update from './components/update-user.jsx'
+import User from './components/user/user.jsx';
+import Create from './components/create-user/create-user.jsx';
+import Update from './components/update-user/update-user.jsx';
+import { useSelector } from 'react-redux';
 import './App.css';
 
-import headerUser from './images/header-user.png'
-import headerAdd from './images/header-add.png'
-import headerSearch from './images/header-search.png'
+import headerUser from './images/header-user.png';
+import headerAdd from './images/header-add.png';
+import headerSearch from './images/header-search.png';
+import { use } from 'react';
 
 function App() {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
+
+  // Llamamos al array de usuarios del Store para obtener todos los usuarios guardados ahí //
+  const users = useSelector((state) => state.users);
 
   const openCreateModal = () => {
     setCreateModalOpen(true);
@@ -47,11 +52,16 @@ function App() {
         </div>
 
         <div className='users'>
-          <User name={'Ariel Escobar'} rut={'21.293.773-8'} birth={'09/05/2003'} position={'Administrador'} email={'arielescobar531@gmail.com'} phone={'+56946705707'} onOpenUpdate={openUpdateModal}></User>
-          <User name={'Ariel Escobar'} rut={'21.293.773-8'} birth={'09/05/2003'} position={'Administrador'} email={'arielescobar531@gmail.com'} phone={'+56946705707'}></User>
-          <User name={'Ariel Escobar'} rut={'21.293.773-8'} birth={'09/05/2003'} position={'Administrador'} email={'arielescobar531@gmail.com'} phone={'+56946705707'}></User>
-          <User name={'Ariel Escobar'} rut={'21.293.773-8'} birth={'09/05/2003'} position={'Administrador'} email={'arielescobar531@gmail.com'} phone={'+56946705707'}></User>
-          <User name={'Ariel Escobar'} rut={'21.293.773-8'} birth={'09/05/2003'} position={'Administrador'} email={'arielescobar531@gmail.com'} phone={'+56946705707'}></User>
+          {
+            users.length == 0 ?
+              <div className="no-users">
+                <h2>No existe ningún usuario.</h2>
+              </div>
+              :
+              users.map((user, index) => ( // Si operador terniario es false
+                <User key={index} name={user.name} rut={user.rut} birth={user.birth} position={user.position} email={user.email} phone={user.phone} onOpenUpdate={openUpdateModal}></User>
+              ))
+          }
         </div>
       </div>
 
