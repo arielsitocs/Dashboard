@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import './update.css';
 
 import CloseModal from '../../images/close-modal.png';
 
-function Update({ isOpen, onClose, name, rut, birth, position, email, phone }) {
+function Update({ isOpen, onClose, id, name, rut, birth, position, email, phone }) {
     if (!isOpen) return null;
-
+    
     const [currentName, setName] = useState(name);
     const [currentRut, setRut] = useState(rut);
     const [currentBirth, setBirth] = useState(birth);
@@ -13,9 +14,33 @@ function Update({ isOpen, onClose, name, rut, birth, position, email, phone }) {
     const [currentEmail, setEmail] = useState(email);
     const [currentPhone, setPhone] = useState(phone);
 
+    const dispatch = useDispatch();
+    const users = useSelector((state) => state.users);
+
+    const updateUser = (e, id) => {
+        e.preventDefault();
+
+        const user = users.find((user) => user.id === id); 
+        if (user) {
+            const updatedUser = {
+                id: id,
+                name: currentName,
+                rut: currentRut,
+                birth: currentBirth,
+                position: currentPosition,
+                email: currentEmail,
+                phone: currentPhone,
+            };
+
+            dispatch({ type: 'updateUser', updatedUser }); 
+
+            onClose();
+        }
+    }
+
     return (
         <div className="update-modal">
-            <form action="post">
+            <form action="submit" onSubmit={(e) => { updateUser(e, id) }}>
                 <div className='close-update'>
                     <img src={CloseModal} id='close-update-modal' onClick={onClose} alt="" />
                 </div>

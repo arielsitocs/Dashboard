@@ -13,9 +13,19 @@ import headerSearch from './images/header-search.png';
 function App() {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
+  const [userToUpdate, setUserToUpdate] = useState({}); // Hook creado para guardar el usuario que se debe actualizar, este usuario se encuentra en la funcion userFilter()
 
   // Llamamos al array de usuarios del Store para obtener todos los usuarios guardados ahí //
   const users = useSelector((state) => state.users);
+
+  // Función para encontrar al usuario que se quiere modificar filtrandolo por su id en el array de usuarios
+  const userFilter = (id) => { 
+    const user = users.find((user) => user.id === id);
+
+    if(user) {
+      setUserToUpdate(user);
+    }
+  }
 
   const openCreateModal = () => {
     setCreateModalOpen(true);
@@ -25,8 +35,9 @@ function App() {
     setCreateModalOpen(false);
   }
 
-  const openUpdateModal = () => {
+  const openUpdateModal = (id) => {
     setUpdateModalOpen(true);
+    userFilter(id);
   }
 
   const closeUpdateModal = () => {
@@ -58,14 +69,14 @@ function App() {
               </div>
               :
               users.map((user) => ( // Si operador terniario es false
-                <User key={user.id} id={user.id} name={user.name} rut={user.rut} birth={user.birth} position={user.position} email={user.email} phone={user.phone} onOpenUpdate={openUpdateModal}></User>
+                <User key={user.id} id={user.id} name={user.name} rut={user.rut} birth={user.birth} position={user.position} email={user.email} phone={user.phone} onOpenUpdate={() => openUpdateModal(user.id)}></User>
               ))
           }
         </div> 
       </div>
 
       <Create isOpen={isCreateModalOpen} onClose={closeCreateModal}></Create>
-      <Update name={'Ariel Escobar'} rut={'21.293.773-8'} birth={'09/05/2003'} position={'Administrador'} email={'arielescobar531@gmail.com'} phone={'+56946705707'} isOpen={isUpdateModalOpen} onClose={closeUpdateModal}></Update>
+      <Update id={userToUpdate.id} name={userToUpdate.name} rut={userToUpdate.rut} birth={userToUpdate.birth} position={userToUpdate.position} email={userToUpdate.email} phone={userToUpdate.phone} isOpen={isUpdateModalOpen} onClose={closeUpdateModal}></Update>
     </div>
   );
 }
