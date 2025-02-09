@@ -4,7 +4,7 @@ import { createStore } from 'redux';
 
 //// Desarrollar funcion para eliminar usuario en la store 
 
-// *TODO: Desarrollar función para modificar el usuario en la store */
+//// Desarrollar función para modificar el usuario en la store 
 
 // Estado inicial con una lista de usuarios vacía
 const initialUsersState = { users: [] };
@@ -12,7 +12,7 @@ const initialUsersState = { users: [] };
 // Reducer: función que actualiza la lista de usuarios
 const userReducer = (state = initialUsersState, action) => {
     if (action.type === 'addUser') {
-        return { users: [...state.users, action.payload] };
+        return { users: [...state.users, action.user] };
     } else if (action.type === 'deleteUser') {
         return { users: state.users.filter((user) => user.id !== action.identifier) };
     } else if (action.type === 'updateUser') {

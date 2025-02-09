@@ -44,16 +44,12 @@ function Create({ isOpen, onClose }) {
         // console.log(newUser)
 
         // Usamos el dispatch para realizar la acción de añadir un usuario a la Store //
-        dispatch({type: 'addUser', payload: newUser});
+        dispatch({type: 'addUser', user: newUser});
         
         // console.log(users);
 
         onClose();
     }
-
-    // useEffect(() => {
-    //     console.log("Usuarios: "+users) 
-    // }, [users]);
 
     return (
         <div className="create-modal">

@@ -14,15 +14,24 @@ function App() {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
   const [userToUpdate, setUserToUpdate] = useState({}); // Hook creado para guardar el usuario que se debe actualizar, este usuario se encuentra en la funcion userFilter()
+  const [searchUser, setSearchUser] = useState(''); // Hook que toma el valor de la barra de búsqueda para usarlo en funciones
 
   // Llamamos al array de usuarios del Store para obtener todos los usuarios guardados ahí //
   const users = useSelector((state) => state.users);
 
+  // Función para mostrar los usuarios que coinciden con los buscados en la barra de búsqueda
+  const filteredUsers = users.filter(user => {
+    return user.name.toLowerCase().includes(searchUser.toLowerCase());
+  })
+
+  // Verificar si existe un usuario con el nombre
+  const userExists = users.some(user => user.name.toLowerCase().includes(searchUser.toLowerCase()));
+
   // Función para encontrar al usuario que se quiere modificar filtrandolo por su id en el array de usuarios
-  const userFilter = (id) => { 
+  const userFilter = (id) => {
     const user = users.find((user) => user.id === id);
 
-    if(user) {
+    if (user) {
       setUserToUpdate(user);
     }
   }
@@ -53,8 +62,8 @@ function App() {
             <h1 className='header-title'>Usuarios</h1>
           </div>
           <div className='header-center'>
-            <input type='text' placeholder='Buscar...' className='header-search'></input>
-            <img src={headerSearch} alt=''></img>
+            <input type='text' placeholder='Buscar por nombre...' className='header-search' onChange={(e) => setSearchUser(e.target.value)}></input>
+            {/* <img src={headerSearch} alt=''></img> */}
           </div>
           <div className='header-right'>
             <img className='header-add' src={headerAdd} onClick={openCreateModal} alt='' ></img>
@@ -63,16 +72,21 @@ function App() {
 
         <div className='users'>
           {
-            users.length == 0 ?
-              <div className="no-users"> 
-                <h2>No existe ningún usuario.</h2> 
+            !userExists && searchUser !== '' ?
+              <div className="no-users">
+                <h2>No existe el usuario {searchUser}.</h2>
               </div>
               :
-              users.map((user) => ( // Si operador terniario es false
-                <User key={user.id} id={user.id} name={user.name} rut={user.rut} birth={user.birth} position={user.position} email={user.email} phone={user.phone} onOpenUpdate={() => openUpdateModal(user.id)}></User>
-              ))
+              users.length == 0 ? // Comprueba si el array de users está vacio con un operador ternario
+                <div className="no-users">
+                  <h2>No existe ningún usuario.</h2>
+                </div>
+                :
+                filteredUsers.map((user) => ( // Si operador terniario es false
+                  <User key={user.id} id={user.id} name={user.name} rut={user.rut} birth={user.birth} position={user.position} email={user.email} phone={user.phone} onOpenUpdate={() => openUpdateModal(user.id)}></User>
+                ))
           }
-        </div> 
+        </div>
       </div>
 
       <Create isOpen={isCreateModalOpen} onClose={closeCreateModal}></Create>
