@@ -1,18 +1,20 @@
 import React from 'react';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import User from './components/user/user.jsx';
 import Create from './components/create-user/create-user.jsx';
 import Update from './components/update-user/update-user.jsx';
-import { useSelector } from 'react-redux';
+import Alert from './components/alert/alert.jsx';
 import './App.css';
 
 import headerUser from './images/header-user.png';
-import headerAdd from './images/header-add.png';
-import headerSearch from './images/header-search.png';
+import headerAdd from './images/header-add.png'; 
 
 function App() {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
+  const [isAlertModalOpen, setAlertModalOpen] = useState(false);
+  const [deleteUserFunction, setDeleteUserFunction] = useState(null);
   const [userToUpdate, setUserToUpdate] = useState({}); // Hook creado para guardar el usuario que se debe actualizar, este usuario se encuentra en la funcion userFilter()
   const [searchUser, setSearchUser] = useState(''); // Hook que toma el valor de la barra de búsqueda para usarlo en funciones
 
@@ -53,6 +55,16 @@ function App() {
     setUpdateModalOpen(false);
   }
 
+  // Recibimos la funcion de delete user que viene del componente user, y se al asignamos al hook DeleteUserFunction para usarla en el alert y asignarle una accion
+  const openAlertModal = (deleteUserFunction) => {
+    setAlertModalOpen(true);
+    setDeleteUserFunction(() => deleteUserFunction);
+  }
+
+  const closeAlertModal = () => {
+    setAlertModalOpen(false);
+  }
+
   return (
     <div className="App">
       <div className='dashboard'>
@@ -72,18 +84,18 @@ function App() {
 
         <div className='users'>
           {
-            !userExists && searchUser !== '' ?
+            !userExists && searchUser !== '' ? // Comprueba que el usuario no exista y que se haya escrito algo en la barra de busqueda
               <div className="no-users">
                 <h2>No existe el usuario {searchUser}.</h2>
               </div>
               :
               users.length == 0 ? // Comprueba si el array de users está vacio con un operador ternario
                 <div className="no-users">
-                  <h2>No existe ningún usuario.</h2>
+                  <h2>Aún no hay usuarios creados.</h2>
                 </div>
                 :
                 filteredUsers.map((user) => ( // Si operador terniario es false
-                  <User key={user.id} id={user.id} name={user.name} rut={user.rut} birth={user.birth} position={user.position} email={user.email} phone={user.phone} onOpenUpdate={() => openUpdateModal(user.id)}></User>
+                  <User key={user.id} id={user.id} name={user.name} rut={user.rut} birth={user.birth} position={user.position} email={user.email} phone={user.phone} onOpenUpdate={() => openUpdateModal(user.id)} OpenAlert={openAlertModal}></User>
                 ))
           }
         </div>
@@ -91,6 +103,7 @@ function App() {
 
       <Create isOpen={isCreateModalOpen} onClose={closeCreateModal}></Create>
       <Update id={userToUpdate.id} name={userToUpdate.name} rut={userToUpdate.rut} birth={userToUpdate.birth} position={userToUpdate.position} email={userToUpdate.email} phone={userToUpdate.phone} isOpen={isUpdateModalOpen} onClose={closeUpdateModal}></Update>
+      <Alert isOpen={isAlertModalOpen} onClose={closeAlertModal} action={deleteUserFunction} title="Quieres eliminar el usuario?"></Alert>
     </div>
   );
 }

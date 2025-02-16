@@ -14,7 +14,7 @@ function Create({ isOpen, onClose }) {
     const [newName, setNewName] = useState('');
     const [newRut, setNewRut] = useState('');
     const [newBirth, setNewBirth] = useState('');
-    const [newPosition, setNewPosition] = useState('');
+    const [newPosition, setNewPosition] = useState('Trabajador');
     const [newEmail, setNewEmail] = useState('');
     const [newPhone, setNewPhone] = useState('');
 
@@ -41,12 +41,12 @@ function Create({ isOpen, onClose }) {
             phone: newPhone,
         };
 
-        // console.log(newUser)
+        console.log(newUser)
 
         // Usamos el dispatch para realizar la acción de añadir un usuario a la Store //
         dispatch({type: 'addUser', user: newUser});
         
-        // console.log(users);
+        // console.log(users);  
 
         onClose();
     }
@@ -78,7 +78,7 @@ function Create({ isOpen, onClose }) {
                 <div className="user-birth-date">
                     <h2>Fecha Nacimiento</h2>
                     <input
-                        type="text"
+                        type="date"
                         onChange={(e) => setNewBirth(e.target.value)}
                         placeholder='-'
                         required
@@ -86,17 +86,16 @@ function Create({ isOpen, onClose }) {
                 </div>
                 <div className="user-position">
                     <h2>Cargo</h2>
-                    <input
-                        type="text"
-                        onChange={(e) => setNewPosition(e.target.value)}
-                        placeholder='-'
-                        required
-                    />
+                    <select onChange={(e) => setNewPosition(e.target.value)}>
+                        <option value="Trabajador">Trabajador</option>
+                        <option value="Supervisor">Supervisor</option>
+                        <option value="Administrador">Administrador</option>
+                    </select>
                 </div>
                 <div className="user-email">
                     <h2>Correo Electrónico</h2>
                     <input
-                        type="text"
+                        type="email"
                         onChange={(e) => setNewEmail(e.target.value)}
                         placeholder='-'
                         required

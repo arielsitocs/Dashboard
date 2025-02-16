@@ -59,13 +59,13 @@ function Update({ isOpen, onClose, id, name, rut, birth, position, email, phone 
                         type="text"
                         value={currentRut}
                         onChange={(e) => setRut(e.target.value)}
-                        required
+                        required 
                     />
                 </div>
                 <div className="user-birth-date">
                     <h2>Fecha Nacimiento</h2>
                     <input
-                        type="text"
+                        type="date"
                         value={currentBirth}
                         onChange={(e) => setBirth(e.target.value)}
                         required
@@ -73,17 +73,16 @@ function Update({ isOpen, onClose, id, name, rut, birth, position, email, phone 
                 </div>
                 <div className="user-position">
                     <h2>Cargo</h2>
-                    <input
-                        type="text"
-                        value={currentPosition}
-                        onChange={(e) => setPosition(e.target.value)}
-                        required
-                    />
+                    <select value={currentPosition} onChange={(e) => setPosition(e.target.value)}>
+                        <option value="Trabajador">Trabajador</option>
+                        <option value="Supervisor">Supervisor</option>
+                        <option value="Administrador">Administrador</option>
+                    </select>
                 </div>
                 <div className="user-email">
                     <h2>Correo Electrónico</h2>
                     <input
-                        type="text"
+                        type="email"
                         value={currentEmail}
                         onChange={(e) => setEmail(e.target.value)}
                         required
