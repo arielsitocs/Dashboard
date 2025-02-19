@@ -1,6 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
 import User from './components/user/user.jsx';
 import Create from './components/create-user/create-user.jsx';
 import Update from './components/update-user/update-user.jsx';
@@ -17,9 +16,15 @@ function App() {
   const [deleteUserFunction, setDeleteUserFunction] = useState(null);
   const [userToUpdate, setUserToUpdate] = useState({}); // Hook creado para guardar el usuario que se debe actualizar, este usuario se encuentra en la funcion userFilter()
   const [searchUser, setSearchUser] = useState(''); // Hook que toma el valor de la barra de búsqueda para usarlo en funciones
+  const [users, setUsers] = useState([]); // Hook para traer los usuarios de la BD y poder renderizar la pagina cuando hayan cambios en la BD
 
-  // Llamamos al array de usuarios del Store para obtener todos los usuarios guardados ahí //
-  const users = useSelector((state) => state.users);
+  // Trae todos los usuarios y los guarda en el array de usuarios, ademas de detectar cada vez que el array cambia para volver a renderizar el componente
+  useEffect(() => {
+    fetch('http://localhost:5000/api/users')
+        .then(response => response.json())
+        .then(data => setUsers(data))
+        .catch(error => console.error('Error al cargar los usuarios: ', error))
+}, [users])
 
   // Función para mostrar los usuarios que coinciden con los buscados en la barra de búsqueda
   const filteredUsers = users.filter(user => {
@@ -46,6 +51,7 @@ function App() {
     setCreateModalOpen(false);
   }
 
+  // Se abre el modal pero ademas al hacerlo se ejecuta el userFilter para encontrar al usuario que se quiere actualizar, se establece el usuario a actualizar con el usuario encontrado
   const openUpdateModal = (id) => {
     setUpdateModalOpen(true);
     userFilter(id);
@@ -80,7 +86,7 @@ function App() {
           <div className='header-right'>
             <img className='header-add' src={headerAdd} onClick={openCreateModal} alt='' ></img>
           </div>
-        </div>
+        </div> 
 
         <div className='users'>
           {

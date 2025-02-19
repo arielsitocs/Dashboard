@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import './update.css';
 
 import CloseModal from '../../images/close-modal.png';
@@ -13,17 +12,20 @@ function Update({ isOpen, onClose, id, name, rut, birth, position, email, phone 
     const [currentPosition, setPosition] = useState(position);
     const [currentEmail, setEmail] = useState(email);
     const [currentPhone, setPhone] = useState(phone);
+    const [users, setUsers] = useState([]);
 
-    const dispatch = useDispatch();
-    const users = useSelector((state) => state.users);
+    // Fetch para llenar el array de usuarios con los usuarios de la BD y ocuparlo en el resto del codigo
+    fetch('http://localhost:5000/api/users')
+        .then(response => response.json())
+        .then(data => setUsers(data))
+        .catch(error => console.error('Error al cargar los usuarios: ', error))
 
-    const updateUser = (e, id) => {
+    const updateUser = async (e, id) => {
         e.preventDefault();
 
         const user = users.find((user) => user.id === id); 
         if (user) {
             const updatedUser = {
-                id: id,
                 name: currentName,
                 rut: currentRut,
                 birth: currentBirth,
@@ -32,9 +34,17 @@ function Update({ isOpen, onClose, id, name, rut, birth, position, email, phone 
                 phone: currentPhone,
             };
 
-            dispatch({ type: 'updateUser', updatedUser }); 
+            try {
+                await fetch(`http://localhost:5000/api/users/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedUser)
+                })
 
-            onClose();
+                onClose();
+            } catch (error) {   
+                console.error('Error al actualizar el usuario: ', error);
+            }
         }
     }
 

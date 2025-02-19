@@ -1,15 +1,10 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
 import './create.css';
 
 import CloseModal from '../../images/close-modal.png'
 
 function Create({ isOpen, onClose }) {
     if (!isOpen) return null;
-
-    // Creación de variables para acceder a las funciones del dispatch y selector de Redux //
-    const dispatch = useDispatch();
-    const users = useSelector((state) => state.users);
 
     const [newName, setNewName] = useState('');
     const [newRut, setNewRut] = useState('');
@@ -18,21 +13,10 @@ function Create({ isOpen, onClose }) {
     const [newEmail, setNewEmail] = useState('');
     const [newPhone, setNewPhone] = useState('');
 
-    const generateId = () => {
-       if(users.length === 0){
-        return 1;
-       }
-       const lastUser = users[users.length - 1]
-       return lastUser.id + 1;
-    }
-
-    const createUser = (e) => {
+    const createUser = async (e) => {
         e.preventDefault();
 
-        const newId = generateId();
-
         const newUser = {
-            id: newId,
             name: newName,
             rut: newRut,
             birth: newBirth,
@@ -41,14 +25,17 @@ function Create({ isOpen, onClose }) {
             phone: newPhone,
         };
 
-        console.log(newUser)
+        try {
+            await fetch('http://localhost:5000/api/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newUser)
+            })
 
-        // Usamos el dispatch para realizar la acción de añadir un usuario a la Store //
-        dispatch({type: 'addUser', user: newUser});
-        
-        // console.log(users);  
-
-        onClose();
+            onClose();
+        } catch (error) {
+            console.error('Error al crear el usuario: ', error);
+        }
     }
 
     return (

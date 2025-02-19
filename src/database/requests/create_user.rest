@@ -1,0 +1,24 @@
+POST http://localhost:5000/api/users 
+Content-Type: application/json
+
+{
+    "name": "Ariel Escobar",
+    "age": 21,
+    "cargo": "Administrador",
+    "city": "Curico",
+    "status": "Alive"
+} 
+
+### <--- Para poder ejecutar peticiones por separado
+
+POST http://localhost:5000/api/users 
+Content-Type: application/json
+
+{
+    "name": "Miguel Angel",
+    "rut": "21.293.773-8",
+    "birth": "21-09-2001",
+    "position": "Supervisor",
+    "email": "migan@gmail.com",
+    "phone": "+56 9 46705707"
+} 

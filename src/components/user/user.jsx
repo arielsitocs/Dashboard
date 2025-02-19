@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux';
 import './user.css'
 
 import Delete from '../../images/user-delete.png';
@@ -6,14 +5,18 @@ import Update from '../../images/user-update.png';
 
 function User({ OpenAlert, onOpenUpdate, id, name, rut, birth, position, email, phone }) {
 
-    const dispatch = useDispatch();
-
     const handleDelete = () => {
         OpenAlert(() => deleteUser(id)); 
       };
 
-    const deleteUser = (id) => {
-        dispatch({ type: 'deleteUser', identifier: id }); // Despacha la acción con el id
+    const deleteUser = async (id) => {
+        try {
+            await fetch(`http://localhost:5000/api/users/${id}`, {
+                method: 'DELETE',
+            })
+        } catch (error) {
+            console.error('Error al eliminar el usuario: ', error);
+        }
       };
 
     return (
