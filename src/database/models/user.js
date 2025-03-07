@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
     birth: String,
     position: String,
     email: String,
-    phone: String
+    phone: String,
+    password: String
 })
 
 // Funcion que nos permite instruir al toJSON como deberia hacer la transformacion segun nuestras necesidades

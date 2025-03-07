@@ -1,8 +1,11 @@
-import express from 'express';
-import connection from './db.js';
+import express, { json } from 'express';
 import cors from 'cors';
-import User from './models/user.js'
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt'; //Libreria para encriptar las contraseñas antes de guardarlas en la BD de mongo
+import jwt from 'jsonwebtoken'; //Libreria para generar tokens al usuario asi no tendra que loguearse cada vez que realice una accion
+import dotenv from 'dotenv'; // Libreria para acceder a las variables de entorno almacenadas en .env
+import User from './models/user.js'
+import connection from './db.js';
 
 connection(); // Conexion a la BD de mongoBDB
 
@@ -12,7 +15,7 @@ app.use(express.json()); // Para que express transforme a json los datos enviado
 
 app.use(cors()); // Permite que se hagan peticiones desde cualquier lado, ya que sin esto los fetchs son bloqueados en el frontend
 
-const PORT = 5000
+const PORT = 5000;
 app.listen(PORT, () => {
     console.log("Servidor escuchando en el puerto:", PORT)
 });
@@ -58,7 +61,7 @@ app.put('/api/users/:id', (request, response) => {
     })
 })
 
-// Metodo que eliminar el usuario por parametro en la peticion(id) y retorna un array con los usuarios que no tienen el id encontrado
+// Metodo que elimina el usuario por parametro en la peticion(id) y retorna un array con los usuarios que no tienen el id encontrado
 app.delete('/api/users/:id', (request, response) => {
     const id = request.params.id;
     const objectId = new mongoose.Types.ObjectId(id); // Para convertir el id recibido en el tipo exacto que usan los ids de mongoDB
@@ -69,8 +72,12 @@ app.delete('/api/users/:id', (request, response) => {
 })
 
 // Metodo post para crear un nuevo usuario(JSON) con los datos que llegan desde el cuerpo de la peticion
-app.post('/api/users', (request, response) => {
+app.post('/api/users', async (request, response) => {
     const user = request.body;
+
+    //Encriptar la contraseña con bcrypt antes de guardarla, hacemos 10 rondas de encriptacion para añadir más seguridad a las contraseñas 
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(user.password, saltRounds);
 
     const newUser = new User({
         name: user.name,
@@ -78,7 +85,8 @@ app.post('/api/users', (request, response) => {
         birth: user.birth,
         position: user.position,
         email: user.email,
-        phone: user.phone 
+        phone: user.phone ,
+        password: passwordHash
     })
 
     newUser.save().then(savedUser => {
@@ -86,4 +94,39 @@ app.post('/api/users', (request, response) => {
     }) 
 })
 
+// APARTADO DE AUTENTIFICACIÓN DE USUARIOS //
+
+app.post('/api/login', async (request, response) => {
+    const {email, password} = request.body;
+
+    try {
+
+        console.log(email, password)
+
+        //Comparar el correo del usuario en la BD
+        const user = await User.findOne({ email });
+        if(!user) {
+            return response.status(404).json({ error: 'Email no encontrado' })
+        }
+
+        //Comparar la contraseña del usuario en la BD 
+        const passwordMatch = bcrypt.compare(password, user.password)
+        if(!passwordMatch) {
+           return response.status(401).json({ error: 'Las contraseñas no coinciden' })
+        }
+
+        //Generar el token con jsonwebtokens
+        const token = jwt.sign(
+            { userId: user.id },
+            'clave_secreta_temporal',
+            { expiresIn: '1h' }
+        )
+
+        //Enviar el token al cliente y el usuario para estableces el usuario logeado
+        response.json({ user, token });
+
+    } catch (error) {  
+        response.status(500).json({ error: `Error en el servidor: ${error}` });
+    }
+})
 
